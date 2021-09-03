@@ -12,31 +12,31 @@ import androidx.core.content.res.ResourcesCompat
 class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     var colors = mutableListOf<Int>()
-    var defaultColor = ResourcesCompat.getColor(
+    var textColor = ResourcesCompat.getColor(
+        resources,
+        R.color.black,
+        null
+    )
+    var bgColor = ResourcesCompat.getColor(
+        resources,
+        android.R.color.background_light,
+        null
+    )
+
+    private val defaultColor = ResourcesCompat.getColor(
         resources,
         R.color.green,
         null
     )
-
-    private var paint = Paint()
-    private var clear = false
-    private var topText = ""
-    private var counter = 0
+    private val paint = Paint()
     private val shapes = mutableListOf<Shape>()
-
-    init {
-        paint.color = ResourcesCompat.getColor(
-            resources,
-            android.R.color.background_light,
-            null
-        )
-    }
+    private var clear = false
+    private var counter = 0
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (++counter == 10) {
             clear = true
             counter = 0
-            topText = ""
             shapes.clear()
             showFinalToast()
         } else {
@@ -57,10 +57,18 @@ class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     override fun onDraw(canvas: Canvas) {
+        paint.textSize = TEXT_SIZE
         if (clear) {
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+            paint.color = bgColor
+            canvas.drawRect(START, START, width.toFloat(), height.toFloat(), paint)
+
+            paint.color = textColor
+            canvas.drawText(counter.toString(), (width/2).toFloat(), TEXT_SIZE, paint)
             clear = false
         } else {
+            paint.color = textColor
+            canvas.drawText(counter.toString(), (width/2).toFloat(), TEXT_SIZE, paint)
+
             shapes.forEach { it.draw(canvas) }
         }
 
@@ -81,6 +89,11 @@ class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             context.getString(R.string.game_over),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private companion object {
+        const val TEXT_SIZE = 96f
+        const val START = 0f
     }
 
     private class Shape(
