@@ -1,6 +1,7 @@
 package ru.vladder2312.customviewtask
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
@@ -22,16 +23,33 @@ class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         android.R.color.background_light,
         null
     )
-
-    private val defaultColor = ResourcesCompat.getColor(
+    var defaultColor = ResourcesCompat.getColor(
         resources,
         R.color.green,
         null
     )
+    var counterColor = ResourcesCompat.getColor(
+        resources,
+        R.color.black,
+        null
+    )
+
     private val paint = Paint()
     private val shapes = mutableListOf<Shape>()
     private var clear = false
     private var counter = 0
+
+    init {
+        val attributeArray: TypedArray = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.MyView
+        )
+        defaultColor = attributeArray.getColor(R.styleable.MyView_default_color, defaultColor)
+        textColor = attributeArray.getColor(R.styleable.MyView_counter_color, counterColor)
+        attributeArray.recycle()
+
+        paint.textSize = TEXT_SIZE
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (++counter == 10) {
@@ -57,7 +75,6 @@ class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     override fun onDraw(canvas: Canvas) {
-        paint.textSize = TEXT_SIZE
         if (clear) {
             paint.color = bgColor
             canvas.drawRect(START, START, width.toFloat(), height.toFloat(), paint)
