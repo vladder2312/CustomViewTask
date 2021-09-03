@@ -11,20 +11,29 @@ import androidx.core.content.res.ResourcesCompat
 
 class MyView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    private var paint = Paint()
-    private var defaultColor = ResourcesCompat.getColor(resources, R.color.green, null)
-    private var bgColor =
-        ResourcesCompat.getColor(resources, android.R.color.background_light, null)
-    private var colors = mutableListOf<Int>()
+    var colors = mutableListOf<Int>()
+    var defaultColor = ResourcesCompat.getColor(
+        resources,
+        R.color.green,
+        null
+    )
 
+    private var paint = Paint()
     private var clear = false
     private var topText = ""
     private var counter = 0
     private val shapes = mutableListOf<Shape>()
 
+    init {
+        paint.color = ResourcesCompat.getColor(
+            resources,
+            android.R.color.background_light,
+            null
+        )
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (++counter == 10) {
-            paint.color = bgColor
             clear = true
             counter = 0
             topText = ""

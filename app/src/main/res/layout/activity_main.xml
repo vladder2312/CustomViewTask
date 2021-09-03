@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <ru.vladder2312.customviewtask.MyView
+        android:id="@+id/myView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
